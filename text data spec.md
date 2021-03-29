@@ -8,14 +8,14 @@ This specification is incomplete in exactly how this file works, but is enough t
 ### Basic format specification:
 DATA_USA.IDX contains offsets for certain sections in the DATA_USA.DAT file. This is used to break segments into specific lengths.
 
-| id | length | purpose |
-|---|---|---|
-| 0x3e8 | 500 |  |
-| 0x3e9 | 500 |  |
-| 0x3ea | 10000 |  |
-| 0x3eb | 149227 | Actual newspaper text |
-| 0x3ec | 160 |  |
-| 0x3ed | 160 |  |
+| id | length | position | purpose |
+|---|---|---|---|
+| 0x3e8 | 500 | 0 | index for Escape Value Table |
+| 0x3e9 | 500 | 500 | |
+| 0x3ea | 10000 | 1000 | |
+| 0x3eb | 149227 | 11000 | Actual newspaper text |
+| 0x3ec | 160 | | |
+| 0x3ed | 160 | | |
 
 Each segment seems to be some amount of data with 0x00 bytes in between values. For segments with strings, 0x00 terminates the string.
 
@@ -111,7 +111,10 @@ Note that values in square braces are not something to decompress, but a pointer
 **Escape Value Table:**\
 Pointer is a friendly name for the thing being pointed to that was created for the purposes of this documentation.
 
-_Note:_ There is likely some index in one of the other parts of the data file for how to build these, but it has not been deciphered yet.
+Value points to an index table stored in the first 500 bytes of DATA_USA.DAT, which points to the beginning of the string section.
+
+Example: 0xCE is Weekday. 0xCE in the "Index for Escape Value Table" (offset 0xCE in the DATA_USA.DAT) has the value 0x07EC. 
+0x07EC in the "newspaper text" (offset 11000 + 0x07EC + 1 in the DATA_USE.DAT file) points to the beginning of the weekday strings.
 
 |Value|Pointer|Value|Pointer|Value|Pointer|Value|Pointer|
 |---|---|---|---|---|---|---|---|
